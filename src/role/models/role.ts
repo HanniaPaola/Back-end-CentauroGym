@@ -1,13 +1,14 @@
-// models/role.ts
+// src/models/Role.ts
 export interface Role {
-    roleId?: number;
+    role_id?: number;
     name: string;
-    description: string;
-    createdAt?: string;
-    createdBy: string;
-    updatedAt?: string;
-    updatedBy: string;
+    description?: string;
+    created_at?: string;
+    created_by?: string;
+    updated_at?: string;
+    updated_by?: string;
     deleted: boolean;
-}
+  }
+  
 
 

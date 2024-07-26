@@ -1,13 +1,13 @@
-// repositories/roleRepository.ts
+// src/repositories/RoleRepository.ts
 import { ResultSetHeader } from 'mysql2';
 import connection from '../../shared/config/database';
 import { Role } from '../models/role';
 
 export class RoleRepository {
+
   public static async findAll(): Promise<Role[]> {
-    const query = 'SELECT * FROM role'; // Asegúrate de que el nombre de la tabla sea correcto
     return new Promise((resolve, reject) => {
-      connection.query(query, (error, results) => {
+      connection.query('SELECT * FROM role', (error, results) => {
         if (error) {
           reject(error);
         } else {
@@ -19,9 +19,8 @@ export class RoleRepository {
   }
 
   public static async findById(role_id: number): Promise<Role | null> {
-    const query = 'SELECT * FROM role WHERE role_id = ?';
     return new Promise((resolve, reject) => {
-      connection.query(query, [role_id], (error, results) => {
+      connection.query('SELECT * FROM role WHERE role_id = ?', [role_id], (error, results) => {
         if (error) {
           reject(error);
         } else {
@@ -36,42 +35,31 @@ export class RoleRepository {
     });
   }
 
-  public static async createRole(roleData: Role): Promise<Role> {
+  public static async createRole(role: Role): Promise<Role> {
     const query = 'INSERT INTO role (name, description, created_at, created_by, updated_at, updated_by, deleted) VALUES (?, ?, ?, ?, ?, ?, ?)';
-    const values = [
-      roleData.name,
-      roleData.description,
-      new Date(),
-      roleData.createdBy,
-      new Date(),
-      roleData.updatedBy,
-      roleData.deleted ? 1 : 0,
-    ];
-
     return new Promise((resolve, reject) => {
-      connection.execute(query, values, (error, result) => {
+      connection.execute(query, [role.name, role.description, role.created_at, role.created_by, role.updated_at, role.updated_by, role.deleted], (error, result: ResultSetHeader) => {
         if (error) {
           reject(error);
         } else {
-          const insertedId = (result as ResultSetHeader).insertId;
-          resolve({ ...roleData, roleId: insertedId });
+          const createdRoleId = result.insertId;
+          const createdRole: Role = { ...role, role_id: createdRoleId };
+          resolve(createdRole);
         }
       });
     });
   }
 
-  public static async updateRole(role_id: number, roleData: Role): Promise<Role | null> {
-    const { name, description, updatedBy, deleted } = roleData;
+  public static async updateRole(role_id: number, role: Role): Promise<Role | null> {
     const query = 'UPDATE role SET name = ?, description = ?, updated_at = ?, updated_by = ?, deleted = ? WHERE role_id = ?';
-    const values = [name, description, new Date(), updatedBy, deleted ? 1 : 0, role_id];
-
     return new Promise((resolve, reject) => {
-      connection.execute(query, values, (error, result) => {
+      connection.execute(query, [role.name, role.description, role.updated_at, role.updated_by, role.deleted, role_id], (error, result: ResultSetHeader) => {
         if (error) {
           reject(error);
         } else {
-          if ((result as ResultSetHeader).affectedRows > 0) {
-            resolve({ ...roleData, roleId: role_id });
+          if (result.affectedRows > 0) {
+            const updatedRole: Role = { ...role, role_id };
+            resolve(updatedRole);
           } else {
             resolve(null);
           }
@@ -83,11 +71,11 @@ export class RoleRepository {
   public static async deleteRole(role_id: number): Promise<boolean> {
     const query = 'DELETE FROM role WHERE role_id = ?';
     return new Promise((resolve, reject) => {
-      connection.execute(query, [role_id], (error, result) => {
+      connection.execute(query, [role_id], (error, result: ResultSetHeader) => {
         if (error) {
           reject(error);
         } else {
-          if ((result as ResultSetHeader).affectedRows > 0) {
+          if (result.affectedRows > 0) {
             resolve(true);
           } else {
             resolve(false);
@@ -97,4 +85,3 @@ export class RoleRepository {
     });
   }
 }
-

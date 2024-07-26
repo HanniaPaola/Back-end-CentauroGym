@@ -1,80 +1,68 @@
-// controllers/roleController.ts
+// src/controllers/RoleController.ts
 import { Request, Response } from 'express';
-import { RoleService } from '../service/roleService'; // Asegúrate de que la ruta sea correcta
-import { Role } from '../models/role';
+import { RoleService } from '../service/roleService';
 
 export const getRoles = async (_req: Request, res: Response) => {
   try {
     const roles = await RoleService.getAllRoles();
-    res.json(roles);
-  } catch (error) {
-    res.status(500).json({ error: 'Error al obtener los roles' });
+    if (roles) {
+      res.status(200).json(roles);
+    } else {
+      res.status(404).json({ message: 'Sin registros' });
+    }
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
   }
 };
 
 export const getRoleById = async (req: Request, res: Response) => {
-  const role_id = parseInt(req.params.role_id, 10);
-  if (isNaN(role_id)) {
-    return res.status(400).json({ error: 'ID inválido' });
-  }
   try {
-    const role = await RoleService.getRoleById(role_id);
+    const role = await RoleService.getRoleById(parseInt(req.params.role_id, 10));
     if (role) {
-      res.json(role);
+      res.status(200).json(role);
     } else {
-      res.status(404).json({ error: 'Role no encontrado' });
+      res.status(404).json({ message: 'No se encontró el rol' });
     }
-  } catch (error) {
-    res.status(500).json({ error: 'Error al obtener el role' });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
   }
 };
 
 export const createRole = async (req: Request, res: Response) => {
-  const roleData: Role = req.body;
   try {
-    const newRole = await RoleService.createRole(roleData);
-    res.status(201).json(newRole);
-  } catch (error) {
-    res.status(500).json({ error: 'Error al crear el role' });
+    const newRole = await RoleService.addRole(req.body);
+    if (newRole) {
+      res.status(201).json(newRole);
+    } else {
+      res.status(400).json({ message: 'Algo salió mal' });
+    }
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
   }
 };
 
 export const updateRole = async (req: Request, res: Response) => {
-  const role_id = parseInt(req.params.role_id, 10);
-  if (isNaN(role_id)) {
-    return res.status(400).json({ error: 'ID inválido' });
-  }
-  const roleData: Role = req.body;
   try {
-    const updatedRole = await RoleService.updateRole(role_id, roleData);
+    const updatedRole = await RoleService.modifyRole(parseInt(req.params.role_id, 10), req.body);
     if (updatedRole) {
-      res.json(updatedRole);
+      res.status(200).json(updatedRole);
     } else {
-      res.status(404).json({ error: 'Role no encontrado' });
+      res.status(404).json({ message: 'Algo salió mal' });
     }
-  } catch (error) {
-    res.status(500).json({ error: 'Error al actualizar el role' });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
   }
 };
 
 export const deleteRole = async (req: Request, res: Response) => {
-  const role_id = parseInt(req.params.role_id, 10);
-  if (isNaN(role_id)) {
-    return res.status(400).json({ error: 'ID inválido' });
-  }
   try {
-    const success = await RoleService.deleteRole(role_id);
-    if (success) {
-      res.json({ message: 'Role eliminado correctamente' });
+    const deleted = await RoleService.deleteRole(parseInt(req.params.role_id, 10));
+    if (deleted) {
+      res.status(200).json({ message: 'Se eliminó el rol.' });
     } else {
-      res.status(404).json({ error: 'Role no encontrado' });
+      res.status(404).json({ message: 'Algo salió mal' });
     }
-  } catch (error) {
-    res.status(500).json({ error: 'Error al eliminar el role' });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
   }
 };
-
-
-
-
-
