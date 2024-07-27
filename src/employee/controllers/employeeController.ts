@@ -1,37 +1,30 @@
 import { Request, Response } from 'express';
 import { EmployeeService } from '../service/EmployeeService';
-import { Employee } from '../models/Employee';
-import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = 'tu_clave_secreta';
+export const loginEmployee= async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+  try {
+    const token = await EmployeeService.login(email, password);
 
-const verifyToken = (token: string | undefined): any => {
-  return new Promise((resolve, reject) => {
     if (!token) {
-      reject('Token requerido');
-      return;
+      res.status(401).json({ message: 'Invalid full name or password' });
+    }else{
+      res.status(200).json({ token });
     }
 
-    jwt.verify(token, JWT_SECRET, (err, decoded) => {
-      if (err) {
-        reject('Token inválido');
-      } else {
-        resolve(decoded);
-      }
-    });
-  });
-};
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
 
-export const getEmployees = async (req: Request, res: Response) => {
+export const getEmployees = async (_req: Request, res: Response) => {
   try {
-    const token = req.headers['authorization']?.split(' ')[1];
-    await verifyToken(token);
-
     const employees = await EmployeeService.getAllEmployees();
-    if (employees) {
-      res.status(200).json(employees);
-    } else {
-      res.status(404).json({ message: 'No se encontraron empleados' });
+    if(employees){
+      res.status(201).json(employees);
+    }else{
+      res.status(404).json({ message: 'Sin registros' });
     }
   } catch (error: any) {
     res.status(500).json({ error: error.message });
@@ -40,15 +33,11 @@ export const getEmployees = async (req: Request, res: Response) => {
 
 export const getEmployeeById = async (req: Request, res: Response) => {
   try {
-    const token = req.headers['authorization']?.split(' ')[1];
-    await verifyToken(token);
-
-    const employee_id = parseInt(req.params.employee_id, 10);
-    const employee = await EmployeeService.getEmployeeById(employee_id);
-    if (employee) {
-      res.status(200).json(employee);
-    } else {
-      res.status(404).json({ message: 'No se encontró el empleado' });
+    const employee = await EmployeeService.getEmployeeById(parseInt(req.params.employee_id, 10));
+    if(employee){
+      res.status(201).json(employee);
+    }else{
+      res.status(404).json({ message: 'No se encontró el usuario' });
     }
   } catch (error: any) {
     res.status(500).json({ error: error.message });
@@ -57,15 +46,11 @@ export const getEmployeeById = async (req: Request, res: Response) => {
 
 export const createEmployee = async (req: Request, res: Response) => {
   try {
-    const token = req.headers['authorization']?.split(' ')[1];
-    await verifyToken(token);
-
-    const newEmployee: Employee = req.body;
-    const createdEmployee = await EmployeeService.createEmployee(newEmployee);
-    if (createdEmployee) {
-      res.status(201).json(createdEmployee);
-    } else {
-      res.status(404).json({ message: 'Algo salió mal al crear el empleado' });
+    const newEmployee = await EmployeeService.addEmployee(req.body);
+    if(newEmployee){
+      res.status(201).json(newEmployee);
+    }else{
+      res.status(404).json({ message: 'Algo salio mal' });
     }
   } catch (error: any) {
     res.status(500).json({ error: error.message });
@@ -74,15 +59,11 @@ export const createEmployee = async (req: Request, res: Response) => {
 
 export const updateEmployee = async (req: Request, res: Response) => {
   try {
-    const token = req.headers['authorization']?.split(' ')[1];
-    await verifyToken(token);
-
-    const employee_id = parseInt(req.params.employee_id, 10);
-    const updatedEmployee = await EmployeeService.updateEmployee(employee_id, req.body);
-    if (updatedEmployee) {
-      res.status(200).json(updatedEmployee);
-    } else {
-      res.status(404).json({ message: 'Algo salió mal al actualizar el empleado' });
+    const updatedEmployee = await EmployeeService.modifyEmployee(parseInt(req.params.employee_id, 10), req.body);
+    if(updatedEmployee){
+      res.status(201).json(updatedEmployee);
+    }else{
+      res.status(404).json({ message: 'Algo salio mal' });
     }
   } catch (error: any) {
     res.status(500).json({ error: error.message });
@@ -91,15 +72,11 @@ export const updateEmployee = async (req: Request, res: Response) => {
 
 export const deleteEmployee = async (req: Request, res: Response) => {
   try {
-    const token = req.headers['authorization']?.split(' ')[1];
-    await verifyToken(token);
-
-    const employee_id = parseInt(req.params.employee_id, 10);
-    const deleted = await EmployeeService.deleteEmployee(employee_id);
-    if (deleted) {
-      res.status(200).json({ message: 'Empleado eliminado con éxito' });
-    } else {
-      res.status(404).json({ message: 'No se encontró el empleado a eliminar' });
+    const deleted = await EmployeeService.deleteEmployee(parseInt(req.params.employee_id, 10));
+    if(deleted){
+      res.status(201).json({ message: 'Se eliminó el empleado.' });
+    }else{
+      res.status(404).json({ message: 'Algo salio mal' });
     }
   } catch (error: any) {
     res.status(500).json({ error: error.message });

@@ -5,9 +5,8 @@ import { Employee } from '../models/Employee';
 export class EmployeeRepository {
 
   public static async findAll(): Promise<Employee[]> {
-    const query = 'SELECT * FROM employee';
     return new Promise((resolve, reject) => {
-      connection.query(query, (error, results) => {
+      connection.query('SELECT employee_id, email, role_id FROM employee', (error: any, results) => {
         if (error) {
           reject(error);
         } else {
@@ -19,9 +18,25 @@ export class EmployeeRepository {
   }
 
   public static async findById(employee_id: number): Promise<Employee | null> {
-    const query = 'SELECT * FROM employee WHERE employee_id = ?';
     return new Promise((resolve, reject) => {
-      connection.query(query, [employee_id], (error, results) => {
+      connection.query('SELECT * FROM employee WHERE employee_id = ?', [employee_id], (error: any, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          const employees: Employee[] = results as Employee[];
+          if (employees.length > 0) {
+            resolve(employees[0]);
+          } else {
+            resolve(null);
+          }
+        }
+      });
+    });
+  }
+
+  public static async findByEmail(email: string): Promise<Employee | null> {
+    return new Promise((resolve, reject) => {
+      connection.query('SELECT * FROM employee WHERE email = ?', [email], (error: any, results) => {
         if (error) {
           reject(error);
         } else {
@@ -37,19 +52,14 @@ export class EmployeeRepository {
   }
 
   public static async createEmployee(employee: Employee): Promise<Employee> {
-    const { role_id, password, personal_info_id, contact_id, safe_number, created_at, created_by, updated_at, updated_by, deleted } = employee;
-    const query = `
-        INSERT INTO employee (role_id, password, personal_info_id, contact_id, safe_number, created_at, created_by, updated_at, updated_by, deleted) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `;
-    const values = [role_id, password, personal_info_id, contact_id, safe_number, created_at, created_by, updated_at, updated_by, deleted ? 1 : 0];
-
+    const query = 'INSERT INTO employee (email, role_id, password, personal_info_id, contact_id, safe_number, salary, created_at, created_by, updated_at, updated_by, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    console.log(employee);
     return new Promise((resolve, reject) => {
-      connection.execute(query, values, (error, result) => {
+      connection.execute(query, [employee.email, employee.role_id, employee.password, employee.personal_info_id, employee.contact_id, employee.safe_number, employee.salary, employee.created_at, employee.created_by, employee.updated_at, employee.updated_by, employee.deleted], (error, result: ResultSetHeader) => {
         if (error) {
           reject(error);
         } else {
-          const createdEmployeeId = (result as ResultSetHeader).insertId;
+          const createdEmployeeId = result.insertId;
           const createdEmployee: Employee = { ...employee, employee_id: createdEmployeeId };
           resolve(createdEmployee);
         }
@@ -58,21 +68,15 @@ export class EmployeeRepository {
   }
 
   public static async updateEmployee(employee_id: number, employeeData: Employee): Promise<Employee | null> {
-    const { role_id, password, personal_info_id, contact_id, safe_number, updated_at, updated_by, deleted } = employeeData;
-    const query = `
-        UPDATE employee 
-        SET role_id = ?, password = ?, personal_info_id = ?, contact_id = ?, safe_number = ?, updated_at = ?, updated_by = ?, deleted = ? 
-        WHERE employee_id = ?
-    `;
-    const values = [role_id, password, personal_info_id, contact_id, safe_number, updated_at, updated_by, deleted ? 1 : 0, employee_id];
-
+    const query = 'UPDATE employee SET email = ?, role_id = ?, password = ?, personal_info_id=?, contact_id=?, safe_number=?, salary=?, updated_at = ?, updated_by = ?, deleted = ? WHERE employee_id = ?';
     return new Promise((resolve, reject) => {
-      connection.execute(query, values, (error, result) => {
+      connection.execute(query, [employeeData.email, employeeData.role_id, employeeData.password, employeeData.personal_info_id, employeeData.contact_id, employeeData.safe_number, employeeData.salary, employeeData.updated_at, employeeData.updated_by, employeeData.deleted, employee_id], (error, result: ResultSetHeader) => {
         if (error) {
           reject(error);
         } else {
-          if ((result as ResultSetHeader).affectedRows > 0) {
-            resolve({ ...employeeData, employee_id: employee_id });
+          if (result.affectedRows > 0) {
+            const updatedEmployee: Employee = { ...employeeData, employee_id: employee_id };
+            resolve(updatedEmployee);
           } else {
             resolve(null);
           }
@@ -84,18 +88,19 @@ export class EmployeeRepository {
   public static async deleteEmployee(employee_id: number): Promise<boolean> {
     const query = 'DELETE FROM employee WHERE employee_id = ?';
     return new Promise((resolve, reject) => {
-      connection.execute(query, [employee_id], (error, result) => {
+      connection.execute(query, [employee_id], (error, result: ResultSetHeader) => {
         if (error) {
           reject(error);
         } else {
-          if ((result as ResultSetHeader).affectedRows > 0) {
+          if (result.affectedRows > 0) {
             resolve(true); // Eliminación exitosa
           } else {
-            resolve(false); // Si no se encontró el empleado a eliminar
+            resolve(false); // Si no se encontró el usuario a eliminar
           }
         }
       });
     });
   }
+
 }
 
