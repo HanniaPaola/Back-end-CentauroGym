@@ -1,4 +1,3 @@
-// src/models/Contact.ts
 export interface Contact {
     contact_id?: number;
     contact_number: string;

@@ -1,4 +1,3 @@
-// src/repositories/ContactRepository.ts
 import { ResultSetHeader } from 'mysql2';
 import connection from '../../shared/config/database';
 import { Contact } from '../models/Contact';
