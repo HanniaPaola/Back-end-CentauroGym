@@ -15,6 +15,7 @@ import trainingPlanRoutes from './trainingPlan/routes/TrainingPlanRoute';
 import medicalRecordRoutes from './medicalRecord/routes/MedicalRecordRoute';
 import personalInfoRoutes from './personalInfo/routes/personal_infoRoute';
 import employeeRoutes from './employee/routes/EmployeRoute';
+import saleProductRoutes from './sale_product/routes/saleproductRoutes';
 
 // Importar middlewares compartidos
 import { errorHandler } from './shared/middlewares/errorHandler';
@@ -49,6 +50,7 @@ app.use('/api/trainingPlan', trainingPlanRoutes);
 app.use('/api/medicalRecord', medicalRecordRoutes);
 app.use('/api/personalinfo', personalInfoRoutes);
 app.use('/api/employee', employeeRoutes);
+app.use('/api/saleproduct', saleProductRoutes)
 
 // Ruta que usarán para acceder a las imágenes //////ruta de donde se sacarán las imágenes
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
