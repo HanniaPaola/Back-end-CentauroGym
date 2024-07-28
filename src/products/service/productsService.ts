@@ -19,8 +19,8 @@ export class ProductService {
 
             product.created_at = DateUtils.formatDate(new Date());
             product.updated_at = DateUtils.formatDate(new Date());
-            product.created_by = 'Usuario que crea el registro';
-            product.updated_by = 'Usuario que actualizó por última vez el registro';
+            product.created_by = 'Empleado';
+            product.updated_by = 'Empleado';
 
             //Despues de todo lo anterior pueden guardar su product en base de datos con su repository
 
