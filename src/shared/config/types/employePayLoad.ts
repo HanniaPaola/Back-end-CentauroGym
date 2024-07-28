@@ -1,5 +1,6 @@
 export interface EmployeePayload {
     employee_id: number;
-    role_id: number;
-    name: string;
+    email: string;
+    password: string;
+    role_id?: number | null;
 }

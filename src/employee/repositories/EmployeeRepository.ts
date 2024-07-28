@@ -36,20 +36,24 @@ export class EmployeeRepository {
 
   public static async findByEmail(email: string): Promise<Employee | null> {
     return new Promise((resolve, reject) => {
-      connection.query('SELECT * FROM employee WHERE email = ?', [email], (error: any, results) => {
-        if (error) {
-          reject(error);
-        } else {
-          const employees: Employee[] = results as Employee[];
-          if (employees.length > 0) {
-            resolve(employees[0]);
-          } else {
-            resolve(null);
-          }
-        }
-      });
+        connection.query('SELECT * FROM employee WHERE email = ?', [email], (error: any, results) => {
+            if (error) {
+                console.error('Error querying database:', error);
+                reject(error);
+            } else {
+                const employees: Employee[] = results as Employee[];
+                if (employees.length > 0) {
+                    console.log('Employee found:', employees[0]);
+                    resolve(employees[0]);
+                } else {
+                    console.log('No employee found with email:', email);
+                    resolve(null);
+                }
+            }
+        });
     });
-  }
+}
+
 
   public static async createEmployee(employee: Employee): Promise<Employee> {
     const query = 'INSERT INTO employee (email, role_id, password, personal_info_id, contact_id, safe_number, salary, created_at, created_by, updated_at, updated_by, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';

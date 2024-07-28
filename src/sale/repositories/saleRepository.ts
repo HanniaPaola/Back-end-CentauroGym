@@ -59,11 +59,7 @@ export class SaleRepository {
 
     public static async updateSale(sale_id: number, saleData: Sale): Promise<Sale | null> {
         const { total, datetime_sale, amount, updated_at, updated_by, deleted } = saleData;
-        const query = `
-            UPDATE sale
-            SET total = ?, datetime_sale = ?, amount = ?, updated_at = ?, updated_by = ?, deleted = ?
-            WHERE sale_id = ?
-        `;
+        const query = `UPDATE sale SET total = ?, datetime_sale = ?, amount = ?, updated_at = ?, updated_by = ?, deleted = ? WHERE sale_id = ?`;
         const values = [total, datetime_sale, amount, updated_at, updated_by, deleted ? 1 : 0, sale_id];
 
         return new Promise((resolve, reject) => {
@@ -82,16 +78,21 @@ export class SaleRepository {
     }
 
     public static async deleteSale(sale_id: number): Promise<boolean> {
-        const query = 'UPDATE sale SET deleted = true WHERE sale_id = ?';
+        const query = 'DELETE FROM sale WHERE sale_id = ?';
         return new Promise((resolve, reject) => {
-            connection.execute(query, [sale_id], (error, result) => {
+            connection.execute(query, [sale_id], (error, result: ResultSetHeader) => {
                 if (error) {
                     reject(error);
                 } else {
-                    resolve((result as ResultSetHeader).affectedRows > 0);
+                    if (result.affectedRows > 0){
+                        resolve (true);
+                    }else{
+                        resolve(false);
+                    }
                 }
             });
         });
     }
 }
+
 
