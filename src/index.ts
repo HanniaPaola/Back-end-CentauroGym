@@ -30,7 +30,7 @@ const port: number = parseInt(process.env.PORT as string, 10);
 const urlProject = process.env.URL
 
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: 'http://localhost:3006',
   methods: 'POST',
   allowedHeaders: 'Content-Type',
 }));
@@ -63,7 +63,6 @@ app.use(errorHandler);
 
 // Iniciar el servidor
 app.listen(port, () => {
-  console.log(`Servidor corriendo en http://localhost:${port}`);
   console.log('Serving static files from:', path.join(__dirname, '../uploads'));
   console.log(`Servidor corriendo en ${urlProject}:${port}`);
 });

@@ -8,7 +8,6 @@ const productRoutes: Router = Router();
 
 productRoutes.get('/', getProducts);
 productRoutes.get('/:product_id', getProductById);
-productRoutes.post('/', createProduct);
 productRoutes.put('/:product_id', updateProduct);
 productRoutes.delete('/:product_id', deleteProduct);
 //Aquí se coloca el Middleware V----------V----Este es el atributo del req que se recibirá
