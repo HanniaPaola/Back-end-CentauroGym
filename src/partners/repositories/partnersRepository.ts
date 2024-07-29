@@ -35,9 +35,9 @@ export class PartnerRepository {
   }
 
   public static async createPartner(partner: Partner): Promise<Partner> {
-    const query = 'INSERT INTO partners (sheet_partner, personal_info_id, contact_id, medical_record_id, plan_id, created_at, created_by, updated_at, updated_by, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    const query = 'INSERT INTO partners (sheet_partner, personal_info_id, contact_id, medical_record_id, plan_id, role_id, created_at, created_by, updated_at, updated_by, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
     return new Promise((resolve, reject) => {
-      connection.execute(query, [partner.sheet_partner, partner.personal_info_id, partner.contact_id, partner.medical_record_id, partner.plan_id, partner.created_at, partner.created_by, partner.updated_at, partner.updated_by, partner.deleted], (error, result: ResultSetHeader) => {
+      connection.execute(query, [partner.sheet_partner, partner.personal_info_id, partner.contact_id, partner.medical_record_id, partner.plan_id, partner.role_id, partner.created_at, partner.created_by, partner.updated_at, partner.updated_by, partner.deleted], (error, result: ResultSetHeader) => {
         if (error) {
           reject(error);
         } else {
@@ -50,9 +50,9 @@ export class PartnerRepository {
   }
 
   public static async updatePartner(partner_id: number, partnerData: Partner): Promise<Partner | null> {
-    const query = 'UPDATE partners SET sheet_partner = ?, personal_info_id = ?, contact_id = ?, medical_record_id = ?, plan_id = ?, updated_at = ?, updated_by = ?, deleted = ? WHERE partner_id = ?';
+    const query = 'UPDATE partners SET sheet_partner = ?, personal_info_id = ?, contact_id = ?, medical_record_id = ?, plan_id = ?, role_id = ?, updated_at = ?, updated_by = ?, deleted = ? WHERE partner_id = ?';
     return new Promise((resolve, reject) => {
-      connection.execute(query, [partnerData.sheet_partner, partnerData.personal_info_id, partnerData.contact_id, partnerData.medical_record_id, partnerData.plan_id, partnerData.updated_at, partnerData.updated_by, partnerData.deleted, partner_id], (error, result: ResultSetHeader) => {
+      connection.execute(query, [partnerData.sheet_partner, partnerData.personal_info_id, partnerData.contact_id, partnerData.medical_record_id, partnerData.plan_id,partnerData.role_id, partnerData.updated_at, partnerData.updated_by, partnerData.deleted, partner_id], (error, result: ResultSetHeader) => {
         if (error) {
           reject(error);
         } else {

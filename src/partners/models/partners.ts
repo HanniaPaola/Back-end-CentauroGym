@@ -6,6 +6,7 @@ export interface Partner {
   contact_id?: number | null;
   medical_record_id?: number | null;
   plan_id?: number | null;
+  role_id?:null;
   created_at?: string;
   created_by?: string;
   updated_at?: string;
