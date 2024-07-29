@@ -38,15 +38,12 @@ export class EmployeeRepository {
     return new Promise((resolve, reject) => {
         connection.query('SELECT * FROM employee WHERE email = ?', [email], (error: any, results) => {
             if (error) {
-                console.error('Error querying database:', error);
                 reject(error);
             } else {
                 const employees: Employee[] = results as Employee[];
                 if (employees.length > 0) {
-                    console.log('Employee found:', employees[0]);
                     resolve(employees[0]);
                 } else {
-                    console.log('No employee found with email:', email);
                     resolve(null);
                 }
             }

@@ -14,33 +14,26 @@ export class EmployeeService {
 
     public static async login(email: string, password: string) {
         try {
-            console.log(`Login attempt for email: ${email}`);
             const employee = await this.getEmployeeByEmail(email);
             if (!employee) {
-                console.log('Employee not found');
                 return null;
             }
-            console.log('Employee found:', employee);
             
             const passwordMatch = await bcrypt.compare(password, employee.password);
             if (!passwordMatch) {
-                console.log('Password does not match');
                 return null;
             }
             
-            console.log('Password matches');
             const payload = {
                 employee_id: employee.employee_id,
                 role_id: employee.role_id,
                 email: employee.email
             };
             
-            const token = await jwt.sign(payload, secretKey, { expiresIn: '10m' });
-            console.log('Token generated:', token);
-            return token;
+            return await jwt.sign(payload, secretKey, { expiresIn: '10m' });
+
     
         } catch (error: any) {
-            console.error('Error during login:', error);
             throw new Error(`Error al logearse: ${error.message}`);
         }
     }

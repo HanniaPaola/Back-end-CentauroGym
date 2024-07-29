@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { getEmployees, getEmployeeById, createEmployee, updateEmployee, deleteEmployee, loginEmployee } from '../controllers/employeeController';
-
+//import { authMiddleware } from '../../shared/middlewares/auth';
 const employeeRoutes: Router = Router();
 
 employeeRoutes.post('/login', loginEmployee);

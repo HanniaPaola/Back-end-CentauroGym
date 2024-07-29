@@ -1,15 +1,16 @@
 import { Request, Response } from 'express';
 import { EmployeeService } from '../service/EmployeeService';
 
+
 export const loginEmployee= async (req: Request, res: Response) => {
   const { email, password } = req.body;
   try {
     const token = await EmployeeService.login(email, password);
 
     if (!token) {
-      res.status(401).json({ message: 'Invalid full name or password' });
+      res.status(401).json({ message: 'Invalid email or password' });
     }else{
-      res.status(200).json({ token });
+      res.status(201).json({ token });
     }
 
   } catch (error) {
@@ -30,6 +31,7 @@ export const getEmployees = async (_req: Request, res: Response) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 export const getEmployeeById = async (req: Request, res: Response) => {
   try {
