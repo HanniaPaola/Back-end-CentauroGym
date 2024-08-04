@@ -1,7 +1,6 @@
-// src/services/RoleService.ts
 import { RoleRepository } from '../repositories/roleRepository';
 import { Role } from '../models/role';
-import { DateUtils } from '../../shared/utils/DateUtils';
+//import { DateUtils } from '../../shared/utils/DateUtils';
 
 export class RoleService {
 
@@ -21,39 +20,53 @@ export class RoleService {
     }
   }
 
-  public static async addRole(role: Role): Promise<Role> {
+  public static async addRole(role: Role) {
     try {
-      role.created_at = DateUtils.formatDate(new Date());
-      role.updated_at = DateUtils.formatDate(new Date());
-      return await RoleRepository.createRole(role);
+        role.created_at = new Date(); 
+        role.updated_at = new Date();
+        return await RoleRepository.createRole(role);
     } catch (error: any) {
-      throw new Error(`Error al crear rol: ${error.message}`);
+        throw new Error(`Error al crear empleado: ${error.message}`);
     }
-  }
+}
 
-  public static async modifyRole(roleId: number, roleData: Role): Promise<Role | null> {
-    try {
-      const roleFound = await RoleRepository.findById(roleId);
+    public static async modifyRole(roleId: number, roleData: Role){
+      try{
+          const userFinded =  await RoleRepository.findById(roleId);
 
-      if (roleFound) {
-        if (roleData.name) {
-          roleFound.name = roleData.name;
-        }
-        if (roleData.description) {
-          roleFound.description = roleData.description;
-        }
-        if (roleData.deleted !== undefined) {
-          roleFound.deleted = roleData.deleted;
-        }
-      } else {
-        return null;
+          if(userFinded){
+              if(roleData.role_id){
+                  userFinded.role_id = roleData.role_id;
+              }
+              
+              if(roleData.created_by){
+                  userFinded.created_by = roleData.created_by;
+              }
+
+              if(roleData.created_at){
+                  userFinded.created_at = roleData.created_at;
+              }
+
+              if(roleData.updated_by){
+                  userFinded.updated_by = roleData.updated_by;
+              }
+              
+              if(roleData.updated_at){
+                  userFinded.updated_at = roleData.updated_at;
+              }
+
+              if(roleData.deleted){
+                  userFinded.deleted = roleData.deleted;
+              }
+          }else{
+              return null;
+          }
+          userFinded.updated_by = roleData.updated_by
+          userFinded.updated_at = new Date();
+          return await RoleRepository.updateRole(roleId, userFinded);
+      }catch (error: any){
+          throw new Error(`Error al modificar empleado: ${error.message}`);
       }
-      roleFound.updated_by = roleData.updated_by;
-      roleFound.updated_at = DateUtils.formatDate(new Date());
-      return await RoleRepository.updateRole(roleId, roleFound);
-    } catch (error: any) {
-      throw new Error(`Error al modificar rol: ${error.message}`);
-    }
   }
 
   public static async deleteRole(roleId: number): Promise<boolean> {

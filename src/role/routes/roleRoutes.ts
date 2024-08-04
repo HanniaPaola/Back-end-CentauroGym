@@ -1,4 +1,3 @@
-// routes/roleRoutes.ts
 import express from 'express';
 import { getRoles, getRoleById, createRole, updateRole, deleteRole } from '../controllers/roleController';
 

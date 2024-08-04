@@ -1,4 +1,3 @@
-// src/routes/ProductRoutes.ts
 import { Router } from 'express';
 import upload from '../../shared/middlewares/uploadMiddleware';
 

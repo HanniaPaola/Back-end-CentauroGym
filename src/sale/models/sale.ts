@@ -1,13 +1,11 @@
 export interface Sale {
     sale_id?: number;
-    total: number;
-    datetime_sale: string; // Utiliza string para manejar fechas
-    amount: number;
-    created_at: string; // Utiliza string para manejar fechas
-    created_by: string;
-    updated_at?: string; // Utiliza string para manejar fechas
-    updated_by?: string;
-    deleted: boolean;
+    product_id: number | null;
+    precio: number;
+    created_by?: string;     
+    created_at?: Date;        
+    updated_by?: string;      
+    updated_at?: Date;       
+    deleted?: boolean;
 }
-
 

@@ -5,19 +5,15 @@ import cors from 'cors';
 import * as dotenv from 'dotenv';
 
 // Importar rutas de módulos
-import partnerRoutes from './partners/routes/partnersRoutes';
 import productRoutes from './products/routes/productsRoutes';
 import typeProductRoutes from './typeproduct/routes/typeProductRoutes';
 import saleRoutes from './sale/routes/saleRoutes';
-import contactRoutes from './contact/routes/ContactRoute';
 import roleRoutes from './role/routes/roleRoutes';
-import trainingPlanRoutes from './trainingPlan/routes/TrainingPlanRoute';
-import medicalRecordRoutes from './medicalRecord/routes/MedicalRecordRoute';
-import personalInfoRoutes from './personalInfo/routes/personal_infoRoute';
-import employeeRoutes from './employee/routes/EmployeRoute';
-import saleProductRoutes from './sale_product/routes/saleproductRoutes';
+import userRoutes from './users/routes/usersRoute';
+import monthlypaymentRoutes from './monthlypayment/routes/monthlypaymentRoutes'
+import productsaleRoutes from './productsale/routes/productsaleRoutes'
 
-// Importar middlewares compartidos
+
 import { errorHandler } from './shared/middlewares/errorHandler';
 import { notFoundHandler } from './shared/middlewares/notFoundHandler';
 
@@ -27,7 +23,7 @@ dotenv.config();
 // Crear la aplicación de Express
 const app: Application = express();
 const port: number = parseInt(process.env.PORT as string, 10);
-const urlProject = process.env.URL
+const imageProject = process.env.URL
 
 app.use(cors({
   origin: 'http://localhost:3006',
@@ -41,16 +37,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Rutas de los módulos
 app.use('/api/role', roleRoutes);
-app.use('/api/partner', partnerRoutes);
 app.use('/api/product', productRoutes);
 app.use('/api/typeproduct', typeProductRoutes);
 app.use('/api/sale', saleRoutes);
-app.use('/api/contact', contactRoutes);
-app.use('/api/trainingPlan', trainingPlanRoutes);
-app.use('/api/medicalRecord', medicalRecordRoutes);
-app.use('/api/personalinfo', personalInfoRoutes);
-app.use('/api/employee', employeeRoutes);
-app.use('/api/saleproduct', saleProductRoutes)
+app.use('/api/monthlypayment', monthlypaymentRoutes);
+app.use('/api/productsale', productsaleRoutes);
+app.use('/api/user',userRoutes);
 
 // Ruta que usarán para acceder a las imágenes //////ruta de donde se sacarán las imágenes
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
@@ -64,6 +56,6 @@ app.use(errorHandler);
 // Iniciar el servidor
 app.listen(port, () => {
   console.log('Serving static files from:', path.join(__dirname, '../uploads'));
-  console.log(`Servidor corriendo en ${urlProject}:${port}`);
+  console.log(`Servidor corriendo en ${imageProject}:${port}`);
 });
 

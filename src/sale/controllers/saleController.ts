@@ -1,12 +1,11 @@
 import { Request, Response } from 'express';
 import { SaleService } from '../service/saleService';
-import { Sale } from '../models/sale';
 
 export const getSales = async (_req: Request, res: Response) => {
   try {
     const sales = await SaleService.getAllSales();
-    if (sales) {
-      res.status(201).json(sales);
+    if (sales.length > 0) {
+      res.status(200).json(sales);
     } else {
       res.status(404).json({ message: 'No se encontraron ventas' });
     }
@@ -19,7 +18,7 @@ export const getSaleById = async (req: Request, res: Response) => {
   try {
     const sale = await SaleService.getSaleById(parseInt(req.params.sale_id, 10));
     if (sale) {
-      res.status(201).json(sale);
+      res.status(200).json(sale);
     } else {
       res.status(404).json({ message: 'No se encontró la venta' });
     }
@@ -30,25 +29,24 @@ export const getSaleById = async (req: Request, res: Response) => {
 
 export const createSale = async (req: Request, res: Response) => {
   try {
-    const newSale: Sale = req.body;
-    const createdSale = await SaleService.createSale(newSale);
-    if (createdSale) {
-      res.status(201).json(createdSale);
+    const newSale = await SaleService.addSale(req.body);
+    if (newSale) {
+      res.status(201).json(newSale);
     } else {
-      res.status(404).json({ message: 'Algo salió mal al crear la venta' });
+      res.status(400).json({ message: 'Algo salió mal' });
     }
   } catch (error: any) {
-    res.status (500).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
 export const updateSale = async (req: Request, res: Response) => {
   try {
-    const updatedSale = await SaleService.updateSale(parseInt(req.params.sale_id, 10), req.body);
+    const updatedSale = await SaleService.modifySale(parseInt(req.params.sale_id, 10), req.body);
     if (updatedSale) {
-      res.status(201).json(updatedSale);
+      res.status(200).json(updatedSale);
     } else {
-      res.status(404).json({ message: 'Algo salió mal al actualizar la venta' });
+      res.status(404).json({ message: 'Algo salió mal' });
     }
   } catch (error: any) {
     res.status(500).json({ error: error.message });
@@ -59,14 +57,13 @@ export const deleteSale = async (req: Request, res: Response) => {
   try {
     const deleted = await SaleService.deleteSale(parseInt(req.params.sale_id, 10));
     if (deleted) {
-      res.status(201).json({ message: 'Venta eliminada con éxito' });
+      res.status(200).json({ message: 'Se eliminó la venta.' });
     } else {
-      res.status(404).json({ message: 'No se encontró la venta a eliminar' });
+      res.status(404).json({ message: 'Algo salió mal' });
     }
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
 };
-
 
 

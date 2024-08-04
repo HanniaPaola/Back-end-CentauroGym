@@ -1,4 +1,3 @@
-// src/controllers/RoleController.ts
 import { Request, Response } from 'express';
 import { RoleService } from '../service/roleService';
 

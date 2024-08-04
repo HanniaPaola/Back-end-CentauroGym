@@ -1,4 +1,3 @@
-// src/repositories/RoleRepository.ts
 import { ResultSetHeader } from 'mysql2';
 import connection from '../../shared/config/database';
 import { Role } from '../models/role';
@@ -20,7 +19,7 @@ export class RoleRepository {
 
   public static async findById(role_id: number): Promise<Role | null> {
     return new Promise((resolve, reject) => {
-      connection.query('SELECT * FROM role WHERE role_id = ?', [role_id], (error, results) => {
+      connection.query('SELECT * FROM role WHERE role_id=?', [role_id], (error, results) => {
         if (error) {
           reject(error);
         } else {
@@ -36,9 +35,9 @@ export class RoleRepository {
   }
 
   public static async createRole(role: Role): Promise<Role> {
-    const query = 'INSERT INTO role (name, description, created_at, created_by, updated_at, updated_by, deleted) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    const query = 'INSERT INTO role (role_id, created_by, created_at, updated_by, updated_at, deleted) VALUES (?, ?, ?, ?, ?, ?)';
     return new Promise((resolve, reject) => {
-      connection.execute(query, [role.name, role.description, role.created_at, role.created_by, role.updated_at, role.updated_by, role.deleted], (error, result: ResultSetHeader) => {
+      connection.execute(query, [role.role_id, role.created_by, role.created_at, role.updated_by, role.updated_at, role.deleted], (error, result: ResultSetHeader) => {
         if (error) {
           reject(error);
         } else {
@@ -50,15 +49,15 @@ export class RoleRepository {
     });
   }
 
-  public static async updateRole(role_id: number, role: Role): Promise<Role | null> {
-    const query = 'UPDATE role SET name = ?, description = ?, updated_at = ?, updated_by = ?, deleted = ? WHERE role_id = ?';
+  public static async updateRole(role_id: number, roleData: Role): Promise<Role | null> {
+    const query = 'UPDATE role SET role_id = ?, created_by = ?, created_at = ?, updated_by = ?, updated_at, deleted = ? WHERE role_id = ?';
     return new Promise((resolve, reject) => {
-      connection.execute(query, [role.name, role.description, role.updated_at, role.updated_by, role.deleted, role_id], (error, result: ResultSetHeader) => {
+      connection.execute(query, [roleData.role_id, roleData.created_by, roleData.created_at, roleData.updated_by, roleData.created_at, role_id], (error, result: ResultSetHeader) => {
         if (error) {
           reject(error);
         } else {
           if (result.affectedRows > 0) {
-            const updatedRole: Role = { ...role, role_id };
+            const updatedRole: Role = { ...roleData, role_id };
             resolve(updatedRole);
           } else {
             resolve(null);

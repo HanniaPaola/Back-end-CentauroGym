@@ -1,96 +1,85 @@
-// src/services/ProductService.ts
-import { ProductRepository } from '../repositories/productRepository';
+import { ProductsRepository } from '../repositories/productRepository';
 import { Product } from '../models/product';
-import { DateUtils } from '../../shared/utils/DateUtils';
-import * as dotenv from 'dotenv';
-
-dotenv.config();
 
 export class ProductService {
-
-    public static async addProduct(product: Product, file: Express.Multer.File) {
-        const urlProject = process.env.URL;
-        const portProject = process.env.PORT;
-        
-        try {
-
-            // Guardar la URL de la imágen en base de datos para poder acceder a la imagen
-            product.url = `${urlProject}:${portProject}/uploads/${file.filename}`;
-
-            product.created_at = DateUtils.formatDate(new Date());
-            product.updated_at = DateUtils.formatDate(new Date());
-            product.created_by = 'Empleado';
-            product.updated_by = 'Empleado';
-
-            //Despues de todo lo anterior pueden guardar su product en base de datos con su repository
-
-            //Yo no lo voy a guardar, solo voy a imprimir los datos relevantes
-            console.log("Nombre del producto: "+product.name_product)
-            console.log("URL del producto: "+product.url)
-
-            return product;
-        } catch (error: any) {
-            throw new Error(`Error al crear producto: ${error.message}`);
-        }
-
-
-} 
-    public static async getAllProducts(): Promise<Product[]> {
-        try {
-            return await ProductRepository.findAll();
-        } catch (error: any) {
-            throw new Error(`Error al obtener productos: ${error.message}`);
-        }
+  public static async getAllProducts(): Promise<Product[]> {
+    try {
+      return await ProductsRepository.findAll();
+    } catch (error: any) {
+      throw new Error(`Error al obtener mensualidades: ${error.message}`);
     }
+  }
 
-    public static async getProductById(productId: number): Promise<Product | null> {
-        try {
-            return await ProductRepository.findById(productId);
-        } catch (error: any) {
-            throw new Error(`Error al encontrar producto: ${error.message}`);
-        }
+  public static async getProductById(product_id: number): Promise<Product | null> {
+    try {
+      return await ProductsRepository.findById(product_id);
+    } catch (error: any) {
+      throw new Error(`Error al encontrar la mensualidad: ${error.message}`);
     }
+  }
 
+  public static async addProduct(product: Product, file: Express.Multer.File) {
+    const imageProject = process.env.URL;
+    const portProject = process.env.PORT;    try {
 
-
-    public static async modifyProduct(productId: number, productData: Product): Promise<Product | null> {
-        try {
-            const productFinded = await ProductRepository.findById(productId);
-            if (productFinded) {
-                if (productData.name_product) {
-                    productFinded.name_product = productData.name_product;
-                }
-                if (productData.type_product_id !== undefined) {
-                    productFinded.type_product_id = productData.type_product_id;
-                }
-                if (productData.expiration) {
-                    productFinded.expiration = productData.expiration;
-                }
-                if (productData.price !== undefined) {
-                    productFinded.price = productData.price;
-                }
-                if (productData.stock !== undefined) {
-                    productFinded.stock = productData.stock;
-                }
-                if (productData.deleted !== undefined) {
-                    productFinded.deleted = productData.deleted;
-                }
-            } else {
-                return null;
-            }
-            productFinded.updated_by = productData.updated_by;
-            productFinded.updated_at = DateUtils.formatDate(new Date());
-            return await ProductRepository.updateProduct(productId, productFinded);
-        } catch (error: any) {
-            throw new Error(`Error al modificar producto: ${error.message}`);
-        }
+        product.image = `${imageProject}:${portProject}/uploads/${file.filename}`;
+  
+      product.created_at = new Date(); 
+      product.updated_at = new Date();
+      product.created_by = 'Usuario que crea el registro';
+      product.updated_by = 'Usuario que actualizó por última vez el registro';
+      console.log("Nombre del producto: "+product.name)
+      console.log("image del producto: "+product.image)
+      return await ProductsRepository.createProduct(product);
+      
+    } catch (error: any) {
+      throw new Error(`Error al crear la mensualidad: ${error.message}`);
     }
+  }
 
-    public static async deleteProduct(productId: number): Promise<boolean> {
-        try {
-            return await ProductRepository.deleteProduct(productId);
-        } catch (error: any) {
-            throw new Error(`Error al eliminar producto: ${error.message}`);
+  public static async modifyProduct(product_id: number, productData: Product): Promise<Product | null> {
+    try {
+      const existingProduct = await ProductsRepository.findById(product_id);
+
+      if (existingProduct) {
+        if (productData.name !== undefined) {
+          existingProduct.name = productData.name;
         }
+        if (productData.marca !== undefined) {
+          productData.marca = productData.marca;
+        }
+        if (productData.marca !== undefined) {
+          existingProduct.marca = productData.marca;
+        }
+        if (productData.precio !== undefined) {
+          existingProduct.precio = productData.precio;
+        }
+        if (productData.created_by !== undefined) {
+          existingProduct.created_by = productData.created_by;
+        }
+        if (productData.created_by !== undefined) {
+            existingProduct.created_by = productData.created_by;
+          }
+        if (productData.updated_by !== undefined) {
+          existingProduct.updated_by = productData.updated_by;
+        }
+        existingProduct.updated_at = new Date(); 
+
+        return await ProductsRepository.updateProduct(product_id, existingProduct);
+      } else {
+        return null;
+      }
+    } catch (error: any) {
+      throw new Error(`Error al actualizar la mensualidad: ${error.message}`);
     }
+    
+  }
+
+  public static async deleteProduct(product_id: number): Promise<boolean> {
+    try {
+      return await ProductsRepository.deleteProduct(product_id);
+    } catch (error: any) {
+      throw new Error(`Error al eliminar la mensualidad: ${error.message}`);
+    }
+  }
 }
