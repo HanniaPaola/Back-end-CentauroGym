@@ -7,7 +7,7 @@ export const getProducts = async (_req: Request, res: Response) => {
     if (products.length > 0) {
       res.status(200).json(products);
     } else {
-      res.status(404).json({ message: 'Sin mensualidades' });
+      res.status(404).json({ message: 'Sin productos' });
     }
   } catch (error: any) {
     res.status(500).json({ error: error.message });
@@ -62,7 +62,7 @@ export const deleteProduct = async (req: Request, res: Response) => {
   try {
     const deleted = await ProductService.deleteProduct(parseInt(req.params.product_id, 10));
     if (deleted) {
-      res.status(200).json({ message: 'Se eliminó la mensualidad.' });
+      res.status(200).json({ message: 'Se eliminó el producto.' });
     } else {
       res.status(404).json({ message: 'Algo salió mal' });
     }

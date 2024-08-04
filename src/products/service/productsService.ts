@@ -6,7 +6,7 @@ export class ProductService {
     try {
       return await ProductsRepository.findAll();
     } catch (error: any) {
-      throw new Error(`Error al obtener mensualidades: ${error.message}`);
+      throw new Error(`Error al obtener productos: ${error.message}`);
     }
   }
 
@@ -14,7 +14,7 @@ export class ProductService {
     try {
       return await ProductsRepository.findById(product_id);
     } catch (error: any) {
-      throw new Error(`Error al encontrar la mensualidad: ${error.message}`);
+      throw new Error(`Error al encontrar el producto: ${error.message}`);
     }
   }
 
@@ -26,14 +26,14 @@ export class ProductService {
   
       product.created_at = new Date(); 
       product.updated_at = new Date();
-      product.created_by = 'Usuario que crea el registro';
-      product.updated_by = 'Usuario que actualizó por última vez el registro';
+      product.created_by = 'Administrador';
+      product.updated_by = 'Administrador';
       console.log("Nombre del producto: "+product.name)
       console.log("image del producto: "+product.image)
       return await ProductsRepository.createProduct(product);
       
     } catch (error: any) {
-      throw new Error(`Error al crear la mensualidad: ${error.message}`);
+      throw new Error(`Error al crear el producto: ${error.message}`);
     }
   }
 
@@ -70,7 +70,7 @@ export class ProductService {
         return null;
       }
     } catch (error: any) {
-      throw new Error(`Error al actualizar la mensualidad: ${error.message}`);
+      throw new Error(`Error al actualizar el product: ${error.message}`);
     }
     
   }
@@ -79,7 +79,7 @@ export class ProductService {
     try {
       return await ProductsRepository.deleteProduct(product_id);
     } catch (error: any) {
-      throw new Error(`Error al eliminar la mensualidad: ${error.message}`);
+      throw new Error(`Error al eliminar el producto: ${error.message}`);
     }
   }
 }

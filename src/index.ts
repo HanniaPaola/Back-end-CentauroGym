@@ -6,7 +6,6 @@ import * as dotenv from 'dotenv';
 
 // Importar rutas de módulos
 import productRoutes from './products/routes/productsRoutes';
-import typeProductRoutes from './typeproduct/routes/typeProductRoutes';
 import saleRoutes from './sale/routes/saleRoutes';
 import roleRoutes from './role/routes/roleRoutes';
 import userRoutes from './users/routes/usersRoute';
@@ -38,7 +37,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Rutas de los módulos
 app.use('/api/role', roleRoutes);
 app.use('/api/product', productRoutes);
-app.use('/api/typeproduct', typeProductRoutes);
 app.use('/api/sale', saleRoutes);
 app.use('/api/monthlypayment', monthlypaymentRoutes);
 app.use('/api/productsale', productsaleRoutes);
