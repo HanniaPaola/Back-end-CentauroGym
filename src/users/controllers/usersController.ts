@@ -8,7 +8,7 @@ export const loginUser= async (req: Request, res: Response) => {
     const token = await UserService.login(email, password);
 
     if (!token) {
-      res.status(401).json({ message: 'Invalid email or password' });
+      res.status(401).json({ message: 'Correo electrónico o contraseña no validos' });
     }else{
       res.status(201).json({ token });
     }
@@ -76,7 +76,7 @@ export const deleteUser = async (req: Request, res: Response) => {
   try {
     const deleted = await UserService.deleteEmployee(parseInt(req.params.user_id, 10));
     if(deleted){
-      res.status(201).json({ message: 'Se eliminó el empleado.' });
+      res.status(201).json({ message: 'Se eliminó el usuario.' });
     }else{
       res.status(404).json({ message: 'Algo salio mal' });
     }

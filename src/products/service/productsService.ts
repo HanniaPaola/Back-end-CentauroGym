@@ -57,8 +57,8 @@ export class ProductService {
         if (productData.created_by !== undefined) {
           existingProduct.created_by = productData.created_by;
         }
-        if (productData.created_by !== undefined) {
-            existingProduct.created_by = productData.created_by;
+        if (productData.created_at !== undefined) {
+            existingProduct.created_at = productData.created_at;
           }
         if (productData.updated_by !== undefined) {
           existingProduct.updated_by = productData.updated_by;
@@ -70,7 +70,7 @@ export class ProductService {
         return null;
       }
     } catch (error: any) {
-      throw new Error(`Error al actualizar el product: ${error.message}`);
+      throw new Error(`Error al actualizar el producto: ${error.message}`);
     }
     
   }

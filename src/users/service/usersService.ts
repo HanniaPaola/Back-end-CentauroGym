@@ -50,7 +50,7 @@ export class UserService {
         try{
             return await UserRepository.findById(userId);
         }catch (error: any){
-            throw new Error(`Error al encontrar empleado: ${error.message}`);
+            throw new Error(`Error al encontrar usuario: ${error.message}`);
         }
     }
 
@@ -58,7 +58,7 @@ export class UserService {
         try{
             return await UserRepository.findByEmail(email);
         }catch (error: any){
-            throw new Error(`Error al encontrar empleado: ${error.message}`);
+            throw new Error(`Error al encontrar usuario: ${error.message}`);
         }
     }
 
@@ -70,7 +70,7 @@ export class UserService {
             user.password = await bcrypt.hash(user.password, salt);
             return await UserRepository.createUser(user);
         } catch (error: any) {
-            throw new Error(`Error al crear empleado: ${error.message}`);
+            throw new Error(`Error al crear usuario: ${error.message}`);
         }
     }
 
@@ -130,7 +130,7 @@ export class UserService {
             userFinded.updated_at = new Date();
             return await UserRepository.updateUser(userId, userFinded);
         }catch (error: any){
-            throw new Error(`Error al modificar empleado: ${error.message}`);
+            throw new Error(`Error al modificar usuario: ${error.message}`);
         }
     }
 
@@ -138,7 +138,7 @@ export class UserService {
         try{
             return await UserRepository.deleteUser(userId);
         }catch (error: any){
-            throw new Error(`Error al eliminar empleado: ${error.message}`);
+            throw new Error(`Error al eliminar usuario: ${error.message}`);
         }
     }
 

@@ -30,7 +30,7 @@ export const getProductById = async (req: Request, res: Response) => {
 export const createProduct = async (req: Request, res: Response) => {
     try {
       if (!req.file) {
-        return res.status(400).send('No file uploaded.');
+        return res.status(400).send('Ningún archivo subido');
       }
       
       const newProduct = await ProductService.addProduct(req.body, req.file);
@@ -57,6 +57,7 @@ export const updateProduct = async (req: Request, res: Response) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 export const deleteProduct = async (req: Request, res: Response) => {
   try {
